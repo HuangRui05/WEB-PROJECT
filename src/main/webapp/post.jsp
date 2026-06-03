@@ -134,6 +134,40 @@
         .badge-demand { background: #9b59b6; color: white; }
         .badge-solved { background: #27ae60; color: white; }
         .badge-pending { background: #e67e22; color: white; }
+
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .edit-modal.active { display: flex; }
+        .edit-modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            width: 500px;
+            max-width: 90%;
+        }
+        .edit-modal h3 { margin-bottom: 15px; color: #2c3e50; }
+        .edit-modal input, .edit-modal textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        .edit-modal textarea { height: 150px; resize: vertical; }
+        .edit-modal .btn-group { text-align: right; margin-top: 10px; }
+        .edit-modal .btn-group button { margin-left: 10px; }
     </style>
 </head>
 <body>
@@ -169,6 +203,18 @@
                     您尚未登录，<a href="login.jsp">登录</a> 后可以发表评论
                 </div>
             <% } %>
+        </div>
+    </div>
+</div>
+
+<div class="edit-modal" id="editModal">
+    <div class="edit-modal-content">
+        <h3>编辑帖子</h3>
+        <input type="text" id="editTitle" placeholder="请输入帖子标题">
+        <textarea id="editContent" placeholder="请输入帖子内容"></textarea>
+        <div class="btn-group">
+            <button class="btn" onclick="closeEditModal()">取消</button>
+            <button class="btn" onclick="submitEdit()">保存</button>
         </div>
     </div>
 </div>
@@ -220,9 +266,10 @@ function loadPost() {
                 '<span>回复: ' + p.replyCount + '</span>' +
                 '<span>' + p.createTime + '</span>';
 
-            // 只有作者或管理员可以删除帖子
+            // 只有作者或管理员可以编辑和删除帖子
             if (currentUserId !== null && (currentUserId == p.userId || currentUserRole == 2)) {
-                metaHtml += ' <button class="btn btn-danger btn-small" onclick="deletePost()" style="margin-left:10px;">删除帖子</button>';
+                metaHtml += ' <button class="btn btn-small" onclick="openEditModal()" style="margin-left:10px;">编辑帖子</button>';
+                metaHtml += ' <button class="btn btn-danger btn-small" onclick="deletePost()" style="margin-left:5px;">删除帖子</button>';
             }
             // 管理员专属：置顶、加精按钮
             if (currentUserRole == 2) {
@@ -322,6 +369,45 @@ function deletePost() {
                 alert(data.message || '删除失败');
             }
         });
+}
+
+var currentTitle = '';
+var currentContent = '';
+
+function openEditModal() {
+    currentTitle = document.getElementById('postTitle').textContent.replace(/置顶|精|悬赏.*积分|已解决|待采纳/g, '').trim();
+    currentContent = document.getElementById('postContent').textContent;
+    document.getElementById('editTitle').value = currentTitle;
+    document.getElementById('editContent').value = currentContent;
+    document.getElementById('editModal').classList.add('active');
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.remove('active');
+}
+
+function submitEdit() {
+    var title = document.getElementById('editTitle').value.trim();
+    var content = document.getElementById('editContent').value.trim();
+    if (!title || !content) {
+        alert('标题和内容不能为空');
+        return;
+    }
+    fetch('post/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + postId + '&title=' + encodeURIComponent(title) + '&content=' + encodeURIComponent(content)
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            alert('修改成功');
+            closeEditModal();
+            loadPost();
+        } else {
+            alert(data.message || '修改失败');
+        }
+    });
 }
 
 function deleteReply(replyId) {
