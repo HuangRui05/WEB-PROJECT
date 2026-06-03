@@ -1,0 +1,32 @@
+-- 需要在 pom.xml 中添加 MySQL 驱动依赖
+-- <dependency>
+--     <groupId>com.mysql</groupId>
+--     <artifactId>mysql-connector-j</artifactId>
+--     <version>8.0.33</version>
+-- </dependency>
+
+-- 执行顺序:
+-- 1. 在 MySQL 中执行 bbs_init.sql 建表
+-- 2. 确保 pom.xml 包含 MySQL 驱动
+-- 3. 部署到 Tomcat 运行
+
+-- API 接口说明:
+-- POST /user/register?username=xxx&password=xxx&nickname=xxx&email=xxx  注册
+-- POST /user/login?username=xxx&password=xxx                      登录
+-- POST /user/logout                                             退出
+-- POST /user/update                                             更新资料
+-- GET  /user/info                                               获取当前用户信息
+-- GET  /section/list                                            获取板块列表
+-- GET  /section/{id}                                            获取板块详情
+-- POST /section/add                                             添加板块(需管理员)
+-- POST /section/update                                          更新板块(需管理员)
+-- GET  /post/list?sectionId=xxx                                获取帖子列表
+-- GET  /post/{id}                                               获取帖子详情
+-- POST /post/publish                                            发布帖子
+-- POST /post/reply                                              回复帖子
+-- POST /post/update                                             更新帖子
+-- POST /post/delete                                             删除帖子(需管理员)
+-- POST /post/setTop?id=xxx&top=1                               置顶帖子
+-- POST /post/setGood?id=xxx&good=1                             加精帖子
+-- POST /post/acceptAnswer?replyId=xxx                           采纳答案
+-- GET  /reply/{postId}                                         获取回复列表
