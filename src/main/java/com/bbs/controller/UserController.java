@@ -90,11 +90,11 @@ public class UserController {
             resp.getWriter().write("{\"success\":false,\"message\":\"未登录\"}");
         } else {
             User freshUser = userService.getById(user.getId());
-            String json = String.format("{\"success\":true,\"user\":{\"id\":%d,\"username\":\"%s\",\"nickname\":\"%s\",\"email\":\"%s\",\"phone\":\"%s\",\"contactType\":\"%s\",\"workNature\":\"%s\",\"workLocation\":\"%s\",\"points\":%d,\"frozenPoints\":%d}}",
+            String json = String.format("{\"success\":true,\"user\":{\"id\":%d,\"username\":\"%s\",\"nickname\":\"%s\",\"email\":\"%s\",\"phone\":\"%s\",\"contactType\":\"%s\",\"workNature\":\"%s\",\"workLocation\":\"%s\",\"points\":%d,\"frozenPoints\":%d,\"role\":%d}}",
                 freshUser.getId(), freshUser.getUsername(), freshUser.getNickname() != null ? freshUser.getNickname() : "",
                 freshUser.getEmail() != null ? freshUser.getEmail() : "", freshUser.getPhone() != null ? freshUser.getPhone() : "",
                 freshUser.getContactType() != null ? freshUser.getContactType() : "", freshUser.getWorkNature() != null ? freshUser.getWorkNature() : "",
-                freshUser.getWorkLocation() != null ? freshUser.getWorkLocation() : "", freshUser.getPoints(), freshUser.getFrozenPoints() != null ? freshUser.getFrozenPoints() : 0);
+                freshUser.getWorkLocation() != null ? freshUser.getWorkLocation() : "", freshUser.getPoints(), freshUser.getFrozenPoints() != null ? freshUser.getFrozenPoints() : 0, freshUser.getRole() != null ? freshUser.getRole() : 0);
             resp.getWriter().write(json);
         }
     }
