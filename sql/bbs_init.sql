@@ -106,7 +106,7 @@ CREATE TABLE point_log (
 -- 初始化管理员账号 (密码: admin123)
 -- ----------------------------
 INSERT INTO user (username, password, nickname, role, points) VALUES
-('admin', '0192023a7bb1a7522d17e2e72b5e4b1a', '管理员', 2, 100);
+('admin', '0192023a7bbd73250516f069df18b500', '管理员', 2, 100);
 -- 0192023a7bb1a7522d17e2e72b5e4b1a 是 admin123 的MD5值
 
 -- ----------------------------
